@@ -1,0 +1,16 @@
+FROM jenkins/jnlp-slave:3.27-1
+
+USER root
+RUN apt-get update && apt-get -y install maven && \
+    cd /tmp && \
+    wget -O jdk-8u202-linux-x64.tar.gz \
+      https://mirrors.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz && \
+    echo "9a5c32411a6a06e22b69c495b7975034409fa1652d03aeb8eb5b6f59fd4594e0  jdk-8u202-linux-x64.tar.gz" > checksum && \
+    sha256sum -c checksum && \
+    mkdir -p /opt && \
+    tar xfvz jdk-8u202-linux-x64.tar.gz -C /opt && \
+    rm -rf /tmp/* /var/lib/apt/lists/*
+
+ENV JAVA_HOME="/opt/jdk1.8.0_202" PATH="/opt/jdk1.8.0_202/bin:$PATH"
+
+USER jenkins
